@@ -30,12 +30,12 @@ func (c *Cache) Get(key string) ([]byte, error) {
 		return nil, err
 	}
 	var bestBefore time.Time
-	err = bestBefore.UnmarshalBinary(value[:15])
-	if err != nil {
+	if err = bestBefore.UnmarshalBinary(value[:15]); err != nil {
 		return nil, err
 	}
+
 	if time.Now().After(bestBefore) {
 		return nil, bigcache.ErrEntryNotFound
 	}
-	return value, nil
+	return value[15:], nil
 }
